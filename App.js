@@ -1,20 +1,25 @@
-import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View } from 'react-native';
+import "react-native-gesture-handler";
+import { StatusBar } from "expo-status-bar";
+import { SafeAreaProvider } from "react-native-safe-area-context";
+
+import { useLoadedAssets } from "./src/hooks/useLoadedAssets";
+import { useColorScheme } from "react-native";
+
+import Navigation from "./src/navigation";
+
+import WeatherContextProvider from "./src/context/WeatherContext";
 
 export default function App() {
-  return (
-    <View style={styles.container}>
-      <Text>Open up App.js to start working on your app!</Text>
-      <StatusBar style="auto" />
-    </View>
-  );
-}
+	const isLoadingComplete = useLoadedAssets();
+	const colorScheme = useColorScheme();
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});
+	if (!isLoadingComplete) {
+		return null;
+	} else {
+		return (
+			<WeatherContextProvider>
+				<Navigation colorScheme={colorScheme} />
+			</WeatherContextProvider>
+		);
+	}
+}
